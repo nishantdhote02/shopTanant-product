@@ -8,6 +8,7 @@ const ErrorMiddleware = require("./middlewares/error.middleware");
 
 //import routes
 const AuthRoutes = require("./routes/user.routes");
+const tenantRoutes = require("./routes/tenant.routes");
 
 require("./models/user.model");
 
@@ -32,6 +33,7 @@ startServer();
 //routes
 
 app.use("/api/auth", AuthRoutes);
+app.use("/api/tenant", tenantRoutes);
 
 // errro middleware use
 app.use(ErrorMiddleware);

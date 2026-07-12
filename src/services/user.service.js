@@ -7,11 +7,10 @@ const userRepo = new UserRepository();
 const bcrpyt = new Bcrypt();
 
 class UserService {
-  async createUser(data, options = {}) {
+  async createUser(data, tenantId, options = {}) {
     let sellerEmail = data.sellerEmail?.toLowerCase()?.trim();
-
     // existing user check
-    const existedUser = await userRepo.findByEmail(sellerEmail);
+    const existedUser = await userRepo.findByTenant(tenantId, sellerEmail);
 
     if (existedUser) {
       throw new ApiError(409, "user already exist");
@@ -27,6 +26,7 @@ class UserService {
         sellerName: data?.sellerName,
         sellerEmail: data?.sellerEmail,
         password: hashedPassword,
+        tenantId,
       };
 
       // 2. creating user
@@ -42,23 +42,25 @@ class UserService {
     }
   }
 
-  async loginUserByEmail(sellerEmail, password) {
+  async loginUserByEmail(sellerEmail, tenantId, password) {
     let trimmedEmail = sellerEmail?.toLowerCase().trim();
 
     if (!trimmedEmail) throw new ApiError(400, "email is required");
     if (!password) throw new ApiError(400, "password is required");
+    if (!tenantId) throw new ApiError(400, "tenantId is required");
 
-    let User = await userRepo.findByEmail(trimmedEmail);
+    let User = await userRepo.findByTenant(tenantId, trimmedEmail);
 
     if (!User) throw new ApiError(404, "user not found");
 
+    console.log(User);
     // verify password
     let verifyPass = await bcrpyt.comparePass(password, User.password);
 
     if (!verifyPass) throw new ApiError(401, "incorrect credentials");
 
     // jwt token
-    let token = jwtHelper.generateToken(User.id);
+    let token = jwtHelper.generateToken(User.id, User.tenantId);
 
     if (!token) throw new ApiError(500, "error in jwt genrate token");
 
@@ -66,8 +68,6 @@ class UserService {
   }
 
   async updateUser(tenantId, sellerEmail, sellerName) {
-
-    
     if (!tenantId) throw new ApiError(400, "tenantId is required");
     // if (!sellerEmail) throw new ApiError(400, "Email is required");
     // if (!sellerName) throw new ApiError(400, "Name is required");
