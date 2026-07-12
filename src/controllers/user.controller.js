@@ -7,7 +7,9 @@ const userService = new UserService();
 
 class userController {
   create = AsyncHandler(async (req, res) => {
-    let { User, token } = await userService.createUser(req.body);
+    let tenantId = req.tenant.id;
+
+    let { User, token } = await userService.createUser(req.body, tenantId);
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -20,10 +22,11 @@ class userController {
   });
 
   login = AsyncHandler(async (req, res) => {
-    let { sellerEmail, password } = req.body;
+    let { sellerEmail, tenantId, password } = req.body;
 
     let { User, token } = await userService.loginUserByEmail(
       sellerEmail,
+      tenantId,
       password,
     );
 

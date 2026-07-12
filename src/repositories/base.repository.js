@@ -6,7 +6,7 @@ class baseRepository {
   }
 
   async find(options = {}) {
-    return this.findAll(options);
+    return await this.model.findAll(options);
   }
 
   async create(data, options = {}) {
