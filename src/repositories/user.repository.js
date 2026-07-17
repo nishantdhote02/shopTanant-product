@@ -11,6 +11,14 @@ class UserRepository extends BaseRepository {
       where: { sellerEmail },
     });
   }
+  async findByTenant(tenantId, sellerEmail) {
+    return await this.model.findOne({
+      where: {
+        tenantId,
+        sellerEmail,
+      },
+    });
+  }
 }
 
 module.exports = UserRepository;

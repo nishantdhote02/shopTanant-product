@@ -6,12 +6,12 @@ const cookieparser = require("cookie-parser");
 // error middleware
 const ErrorMiddleware = require("./middlewares/error.middleware");
 
-//import routes
+// import routes
 const AuthRoutes = require("./routes/user.routes");
-const ProductRoutes= require("./routes/product.routes")
-const CustomerRoutes= require("./routes/customer.routes")
-const OrderRoutes= require("./routes/order.routes")
-
+const tenantRoutes = require("./routes/tenant.routes");
+const ProductRoutes = require("./routes/product.routes");
+const CustomerRoutes = require("./routes/customer.routes");
+const OrderRoutes = require("./routes/order.routes");
 
 require("./models/user.model");
 
@@ -25,16 +25,15 @@ const startServer = async () => {
     await Sequelize.authenticate();
     console.log("Database connected successfully.");
 
-    // Models import करें
-    const { 
-      Tenant, 
-      User, 
-      Customer, 
-      Product, 
-      Order, 
+    const {
+      Tenant,
+      User,
+      Customer,
+      Product,
+      Order,
       OrderItem,
     } = require("./models/index");
-    
+
     await Tenant.sync({ alter: true });
     await User.sync({ alter: true });
     await Customer.sync({ alter: true });
@@ -42,23 +41,20 @@ const startServer = async () => {
     await Order.sync({ alter: true });
 
   } catch (error) {
-    console.log("g Error in postgresql sync:", error);
+    console.log("Error in postgresql sync:", error);
   }
 };
+
 startServer();
 
-//routes
-
+// Routes
 app.use("/api/auth", AuthRoutes);
-
-//
-// 🚥 Mount New Shop Routes (For Testing)
+app.use("/api/tenant", tenantRoutes);
 app.use("/api/products", ProductRoutes);
 app.use("/api/customers", CustomerRoutes);
 app.use("/api/orders", OrderRoutes);
-//
 
-// errro middleware use
+// Error middleware
 app.use(ErrorMiddleware);
 
 module.exports = app;

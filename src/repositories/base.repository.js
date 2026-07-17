@@ -5,6 +5,10 @@ class BaseRepository {
     this.model = model;
   }
 
+  async find(options = {}) {
+    return await this.model.findAll(options);
+  }
+
   async create(data, options = {}) {
     return await this.model.create(data, options);
   }
@@ -16,6 +20,7 @@ class BaseRepository {
   async findOne(options = {}) {
     return await this.model.findOne(options);
   }
+
   async findById(id, tenantId, options = {}) {
     return await this.model.findOne({
       where: { id, tenantId },

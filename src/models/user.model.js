@@ -9,6 +9,7 @@ const User = Sequelize.define(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+      allowNull: false,
     },
     sellerName: {
       type: DataTypes.STRING,
@@ -32,4 +33,3 @@ const User = Sequelize.define(
 );
 
 module.exports = User;
-
