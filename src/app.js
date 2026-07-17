@@ -34,7 +34,7 @@ const startServer = async () => {
       OrderItem,
     } = require("./models/index");
 
-    await Tenant.sync({ alter: true });
+    await Tenant.sync({ alter: true }); 
     await User.sync({ alter: true });
     await Customer.sync({ alter: true });
     await Product.sync({ alter: true });

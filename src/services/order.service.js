@@ -98,24 +98,16 @@ class OrderService extends BaseService {
           totalAmount,
           shippingAddress,
           billingAddress,
+          items: orderItemsToCreate,
         },
         { transaction },
       );
-
-      const itemsWithOrderId = orderItemsToCreate.map((item) => ({
-        ...item,
-        orderId: order.id,
-      }));
-
-      await orderRepo.createOrderItems(itemsWithOrderId, { transaction });
 
       if (localTransaction) {
         await transaction.commit();
       }
 
-      return await orderRepo.findById(order.id, tenantId, {
-        include: [{ association: "orderItems" }],
-      });
+      return order;
     } catch (error) {
       if (localTransaction && !transaction.finished) {
         await transaction.rollback();
@@ -127,12 +119,6 @@ class OrderService extends BaseService {
   async getOrderDetails(orderId, tenantId) {
     return await orderRepo.findById(orderId, tenantId, {
       include: [
-        {
-          association: "orderItems",
-          include: [
-            { association: "product", attributes: ["name", "imageUrl"] },
-          ],
-        },
         {
           association: "customer",
           attributes: ["firstName", "lastName", "email"],

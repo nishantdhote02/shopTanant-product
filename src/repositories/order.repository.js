@@ -1,5 +1,5 @@
 const Order = require("../models/order.model");
-const OrderItem = require("../models/orderItem.model");
+// const { OrderItem } = require("../models");
 const BaseRepository = require("./base.repository");
 
 class OrderRepository extends BaseRepository {
@@ -31,9 +31,9 @@ class OrderRepository extends BaseRepository {
     });
   }
 
-  async createOrderItems(items, options = {}) {
-    return await OrderItem.bulkCreate(items, options);
-  }
+  // async createOrderItems(items, options = {}) {
+  //   return await OrderItem.bulkCreate(items, options);
+  // }
 }
 
 module.exports = OrderRepository;

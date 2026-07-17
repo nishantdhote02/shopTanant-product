@@ -28,7 +28,7 @@ const authMiddleware = async (req, res, next) => {
       throw new ApiError(401, "Invalid authentication token.");
     }
 
-    const user = await userRepo.findById(decoded.id);
+        const user = await userRepo.findOne({ where: { id: decoded.id } });
 
     if (!user) {
       throw new ApiError(404, "User not found.");
@@ -45,6 +45,8 @@ const authMiddleware = async (req, res, next) => {
 
 const tenantMiddleware = async (req, res, next) => {
   try {
+    req.tenantId = req.tenantId || req.body?.tenantId || req.query?.tenantId || req.headers?.["x-tenant-id"];
+
     if (!req.tenantId) {
       throw new ApiError(400, "Tenant id not found");
     }
