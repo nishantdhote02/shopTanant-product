@@ -87,7 +87,8 @@ class OrderService extends BaseService {
       const random = Math.floor(1000 + Math.random() * 9000);
       const orderNumber = `ORD-${timestamp}-${random}`;
 
-      const order = await orderRepo.create(
+      const order = 
+      await orderRepo.create(
         {
           tenantId,
           orderNumber,
